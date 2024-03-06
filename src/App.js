@@ -4,10 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './WeatherForecast.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faMoon, faCloud, faCloudSun, faCloudMoon, faCloudRain, faCloudSunRain, faBolt, faSnowflake, faSmog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment-timezone';
 
 const API_KEY = 'bc61bf5657b047f7a4bc553fc19c04c9';
-const API_URL = 'https://api.openweathermap.org/data/3.0/';
+const API_URL = 'https://api.openweathermap.org/data/2.5/';
 
 function WeatherForecast() {
   const [city, setCity] = useState('Paris'); // État pour stocker le nom de la ville
@@ -20,29 +19,56 @@ function WeatherForecast() {
 
   const fetchWeatherData = (city) => {
     axios.get(`${API_URL}weather?q=${city}&appid=${API_KEY}&units=metric`)
-    .then(response => {
-        console.log(response.data);
+      .then(response => {
         setWeatherData(response.data);
       })
       .catch(error => {
         console.error('Error fetching current weather data:', error);
       });
 
-      axios.get(`${API_URL}forecast?q=${city}&appid=${API_KEY}&units=metric`)
+    axios.get(`${API_URL}forecast?q=${city}&appid=${API_KEY}&units=metric`)
       .then(response => {
-        console.log(moment());
-        
-        const currentTime = moment().tz(response.data.city.timezone).format('YYYY-MM-DD HH:mm:ss');
-        const currentForecast = response.data.list.find(forecast => forecast.dt_txt === currentTime);
-        if (currentForecast) {
-          setForecastData([currentForecast]);
-        } else {
-          console.error('No forecast available for current time.');
-        }
+        // Diviser les prévisions en groupes par jour
+        const dailyForecasts = groupForecastByDay(response.data.list);
+        setForecastData(dailyForecasts);
       })
       .catch(error => {
         console.error('Error fetching forecast data:', error);
       });
+  };
+
+  const groupForecastByDay = (forecastList) => {
+    const groupedForecasts = {};
+    forecastList.forEach(forecast => {
+      const date = new Date(forecast.dt * 1000);
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+      if (!groupedForecasts[dayOfWeek]) {
+        groupedForecasts[dayOfWeek] = [];
+      }
+      groupedForecasts[dayOfWeek].push(forecast);
+    });
+
+    // Calculer la température maximale et minimale pour chaque jour
+    const dailyForecasts = Object.keys(groupedForecasts).map(dayOfWeek => {
+      const forecastsForDay = groupedForecasts[dayOfWeek];
+      const minTemp = Math.min(...forecastsForDay.map(forecast => forecast.main.temp_min));
+      const maxTemp = Math.max(...forecastsForDay.map(forecast => forecast.main.temp_max));
+      const iconCode = forecastsForDay[0].weather[0].icon;
+      const description = forecastsForDay[0].weather[0].description;
+      return {
+        dt_txt: dayOfWeek,
+        main: {
+          temp_min: minTemp,
+          temp_max: maxTemp
+        },
+        weather: [{
+          icon: iconCode,
+          description: description
+        }]
+      };
+    });
+
+    return dailyForecasts;
   };
 
   const handleSubmit = (e) => {
@@ -115,7 +141,8 @@ function WeatherForecast() {
                   <div style={{ color: '#333', fontWeight: 'bold', marginBottom: '5px' }}>{forecast.dt_txt}</div>
                   <div className="d-flex align-items-center" style={{ marginBottom: '5px' }}>
                     <div>{getWeatherIcon(forecast.weather[0].icon)}</div>
-                    <div style={{ color: '#333', fontSize: '18px', marginLeft: '10px' }}>Temperature: {forecast.main.temp}°C</div>
+                    <div style={{ color: '#333', fontSize: '18px', marginLeft: '10px' }}>Min Temperature: {forecast.main.temp_min}°C</div>
+                    <div style={{ color: '#333', fontSize: '18px', marginLeft: '10px' }}>Max Temperature: {forecast.main.temp_max}°C</div>
                     <div style={{ marginLeft: '10px', fontStyle: 'italic' }}>{forecast.weather[0].description}</div>
                   </div>
                   {index < forecastData.length - 1 && <hr style={{ margin: '5px 0' }} />} {/* Ligne entre chaque jour */}
@@ -130,6 +157,10 @@ function WeatherForecast() {
 }
 
 export default WeatherForecast;
+
+
+
+
 
 
 
