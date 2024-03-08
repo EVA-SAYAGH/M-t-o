@@ -69,3 +69,27 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+
+
+GIT : 
+ReadMe : 
+Pour installer les dépendances nécessaires au projet, tu dois probablement exécuter les commandes suivantes :
+
+Pour installer React :
+npx create-react-app my-weather-app
+
+Pour installer Axios :
+npm install axios
+
+Pour installer Bootstrap :
+npm install bootstrap
+
+Pour installer FontAwesome :
+npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+
+Pour exécuter le projet il faut ecrire dans le terminal : “npm start”
+
+Votre application météo utilise React pour créer une interface conviviale permettant aux utilisateurs de rechercher la météo actuelle et les prévisions météorologiques pour une ville donnée. Elle utilise l'API OpenWeatherMap pour récupérer les données météorologiques en temps réel et affiche les informations telles que la température actuelle, la description du temps et les prévisions météorologiques pour les prochains jours, avec des icônes représentatives. Les prévisions sont regroupées par jour et incluent les températures minimales et maximales pour chaque jour de la semaine. L'interface est également conçue de manière à être réactive et intuitive pour une meilleure expérience utilisateur.
