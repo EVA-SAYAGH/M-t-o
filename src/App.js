@@ -9,7 +9,7 @@ const API_KEY = 'bc61bf5657b047f7a4bc553fc19c04c9';
 const API_URL = 'https://api.openweathermap.org/data/2.5/';
 
 function WeatherForecast() {
-  const [city, setCity] = useState('Paris'); // State to store the city name
+  const [city, setCity] = useState('Paris'); // State to store the city
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
 
