@@ -58,4 +58,18 @@
     border-radius: 10px;
     padding: 20px;
   }
+
+  .input-group {
+    display: flex;
+  }
+  
+  .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
   

@@ -3,18 +3,18 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './WeatherForecast.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon, faCloud, faCloudSun, faCloudMoon, faCloudRain, faCloudSunRain, faBolt, faSnowflake, faSmog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSun, faMoon, faCloud, faCloudSun, faCloudMoon, faCloudRain, faBolt, faSnowflake, faSmog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const API_KEY = 'bc61bf5657b047f7a4bc553fc19c04c9';
 const API_URL = 'https://api.openweathermap.org/data/2.5/';
 
 function WeatherForecast() {
-  const [city, setCity] = useState('Paris'); // État pour stocker le nom de la ville
+  const [city, setCity] = useState('Paris'); // State to store the city name
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
 
   useEffect(() => {
-    fetchWeatherData(city); // Appel initial à la fonction pour charger les données météo
+    fetchWeatherData(city); // Initial call to function to load weather data
   }, [city]);
 
   const fetchWeatherData = (city) => {
@@ -28,7 +28,7 @@ function WeatherForecast() {
 
     axios.get(`${API_URL}forecast?q=${city}&appid=${API_KEY}&units=metric`)
       .then(response => {
-        // Diviser les prévisions en groupes par jour
+        // Group forecasts by day
         const dailyForecasts = groupForecastByDay(response.data.list);
         setForecastData(dailyForecasts);
       })
@@ -48,7 +48,7 @@ function WeatherForecast() {
       groupedForecasts[dayOfWeek].push(forecast);
     });
 
-    // Calculer la température maximale et minimale pour chaque jour
+    // Calculate the maximum and minimum temperature for each day
     const dailyForecasts = Object.keys(groupedForecasts).map(dayOfWeek => {
       const forecastsForDay = groupedForecasts[dayOfWeek];
       const minTemp = Math.min(...forecastsForDay.map(forecast => forecast.main.temp_min));
@@ -72,11 +72,11 @@ function WeatherForecast() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
-    fetchWeatherData(city); // Charge les données météo pour la ville spécifiée
+    e.preventDefault(); // Prevent page reload when form is submitted
+    fetchWeatherData(city); // Load weather data for the specified city
   };
 
-  // Fonction pour obtenir l'icône météo en fonction du code de l'icône
+  // Function to get weather icon based on icon code
   const getWeatherIcon = (iconCode) => {
     switch (iconCode) {
       case '01d':
@@ -145,7 +145,7 @@ function WeatherForecast() {
                     <div style={{ color: '#333', fontSize: '18px', marginLeft: '10px' }}>Max Temperature: {forecast.main.temp_max}°C</div>
                     <div style={{ marginLeft: '10px', fontStyle: 'italic' }}>{forecast.weather[0].description}</div>
                   </div>
-                  {index < forecastData.length - 1 && <hr style={{ margin: '5px 0' }} />} {/* Ligne entre chaque jour */}
+                  {index < forecastData.length - 1 && <hr style={{ margin: '5px 0' }} />} {/* Line between each day */}
                 </li>
               ))}
             </ul>
@@ -157,6 +157,9 @@ function WeatherForecast() {
 }
 
 export default WeatherForecast;
+
+
+
 
 
 
